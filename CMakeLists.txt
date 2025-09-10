@@ -49,7 +49,7 @@ set(AVR_UPLOADTOOL dfu-programmer)
 set(AVR_UPLOADTOOL_PORT usb)
 #set(AVR_UPLOADTOOL_OPTIONS)
 set(AVR_MCU atmega128a)
-set(F_CPU 8000000UL)
+set(F_CPU 7'372'800UL)
 ### END TOOLCHAIN SETUP AREA #############################################
 
 # include(generic-gcc-avr.cmake)
@@ -57,12 +57,13 @@ set(F_CPU 8000000UL)
 ##########################################################################
 # name your project
 ##########################################################################
-project(blink C)
 
+project(blink C)
 
 ##################################################################################
 # status messages
 ##################################################################################
+
 message(STATUS "Current uploadtool is: ${AVR_UPLOADTOOL}")
 message(STATUS "Current upload port is: ${AVR_UPLOADTOOL_PORT}")
 message(STATUS "Current uploadtool options are: ${AVR_UPLOADTOOL_OPTIONS}")
@@ -71,6 +72,7 @@ message(STATUS "Current MCU is set to: ${AVR_MCU}")
 ##################################################################################
 # set build type, if not already set at cmake command line
 ##################################################################################
+
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif (NOT CMAKE_BUILD_TYPE)
@@ -78,6 +80,7 @@ endif (NOT CMAKE_BUILD_TYPE)
 ##################################################################################
 # some cmake cross-compile necessities
 ##################################################################################
+
 if (DEFINED ENV{AVR_FIND_ROOT_PATH})
     set(CMAKE_FIND_ROOT_PATH $ENV{AVR_FIND_ROOT_PATH})
 else (DEFINED ENV{AVR_FIND_ROOT_PATH})
@@ -102,17 +105,13 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CMAKE_SYSTEM_INCLUDE_PATH "${CMAKE_FIND_ROOT_PATH}/include")
 set(CMAKE_SYSTEM_LIBRARY_PATH "${CMAKE_FIND_ROOT_PATH}/lib")
 
-if (DEFINED ENV{AVR_DFP_PATH})
-    set(AVR_DFP $ENV{AVR_DFP_PATH})
-endif (DEFINED ENV{AVR_DFP_PATH})
-
 ##################################################################################
 # status messages for generating
 ##################################################################################
+
 message(STATUS "Set CMAKE_FIND_ROOT_PATH to ${CMAKE_FIND_ROOT_PATH}")
 message(STATUS "Set CMAKE_SYSTEM_INCLUDE_PATH to ${CMAKE_SYSTEM_INCLUDE_PATH}")
 message(STATUS "Set CMAKE_SYSTEM_LIBRARY_PATH to ${CMAKE_SYSTEM_LIBRARY_PATH}")
-message(STATUS "Set AVR_DFP to ${AVR_DFP}")
 
 ##################################################################################
 # set compiler options for specific build types
@@ -123,6 +122,7 @@ message(STATUS "Set AVR_DFP to ${AVR_DFP}")
 ##################################################################################
 # compiler options for all build types
 ##################################################################################
+
 set(CSTANDARD "")
 set(CDEBUG "")
 set(CWARN -Wall -Wextra -Wno-main -Wstrict-overflow=5 -Winline)
@@ -131,7 +131,6 @@ set(COPT -Os)
 
 add_definitions(-DF_CPU=${F_CPU})
 add_compile_options(${CDEBUG} ${COPT} ${CWARN} ${CSTANDARD} ${CTUNING})
-
 
 ### File Discovery
 # Files to be compiled - The following lines allow for the project structure to be managed using directories upon subdirectories
@@ -152,5 +151,6 @@ message(INCLUDE_DIRS = ${INCLUDE_DIRS})
 ##################################################################################
 # add AVR executable
 ##################################################################################
+
 add_avr_executable(${PROJECT_NAME} ${SRC_FILES})
 

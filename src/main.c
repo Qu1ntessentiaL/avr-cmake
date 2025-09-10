@@ -2,7 +2,7 @@
 #include <util/delay.h>
 
 int main(void) {
-    // Настраиваем PE7 как выход
+    // Настраиваем PE0 как выход
     DDRE |= (1 << PE0);
 
     while (1) {
