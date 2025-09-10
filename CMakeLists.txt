@@ -45,11 +45,13 @@ cmake_minimum_required(VERSION 3.15)
 ##################################################################################
 # tools to be used for programming the AVR
 ##################################################################################
+
 set(AVR_UPLOADTOOL dfu-programmer)
 set(AVR_UPLOADTOOL_PORT usb)
 #set(AVR_UPLOADTOOL_OPTIONS)
 set(AVR_MCU atmega128a)
-set(F_CPU 7'372'800UL)
+set(F_CPU 7372800UL)
+
 ### END TOOLCHAIN SETUP AREA #############################################
 
 # include(generic-gcc-avr.cmake)
@@ -58,7 +60,7 @@ set(F_CPU 7'372'800UL)
 # name your project
 ##########################################################################
 
-project(blink C)
+project(blink C CXX)
 
 ##################################################################################
 # status messages
@@ -135,7 +137,7 @@ add_compile_options(${CDEBUG} ${COPT} ${CWARN} ${CSTANDARD} ${CTUNING})
 ### File Discovery
 # Files to be compiled - The following lines allow for the project structure to be managed using directories upon subdirectories
 # See https://stackoverflow.com/questions/6921695/how-can-i-build-a-c-project-with-multiple-interdependent-subdirectories
-file(GLOB_RECURSE SRC_FILES "src/*.c")
+file(GLOB_RECURSE SRC_FILES "src/*.c" "src/*.cpp")
 file(GLOB_RECURSE HEADER_FILES "src/*.h")
 
 set(INCLUDE_DIRS "")

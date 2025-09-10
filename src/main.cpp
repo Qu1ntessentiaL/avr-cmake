@@ -1,7 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-int main(void) {
+int main() {
     // Настраиваем PE0 как выход
     DDRE |= (1 << PE0);
 
