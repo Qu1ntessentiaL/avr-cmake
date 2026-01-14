@@ -138,7 +138,7 @@ add_compile_options(${CDEBUG} ${COPT} ${CWARN} ${CSTANDARD} ${CTUNING})
 # Files to be compiled - The following lines allow for the project structure to be managed using directories upon subdirectories
 # See https://stackoverflow.com/questions/6921695/how-can-i-build-a-c-project-with-multiple-interdependent-subdirectories
 file(GLOB_RECURSE SRC_FILES "src/*.c" "src/*.cpp")
-file(GLOB_RECURSE HEADER_FILES "src/*.h")
+file(GLOB_RECURSE HEADER_FILES "src/*.h" "src/*.hpp")
 
 set(INCLUDE_DIRS "")
 foreach (_headerFile ${HEADER_FILES})
