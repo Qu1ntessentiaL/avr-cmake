@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <avr/io.h>
 
 namespace GPIO {
     enum class Port : uint8_t {
@@ -112,7 +111,7 @@ namespace GPIO {
         static void high() { *PortRegs<P>::port() |= mask; }
         static void low() { *PortRegs<P>::port() &= ~mask; }
 
-        static void toggle() { *PortRegs<P>::pin() = mask; }
+        static void toggle() { *PortRegs<P>::port() ^= mask; }
 
         static bool read() {
             return (*PortRegs<P>::pin() & mask) != 0;
