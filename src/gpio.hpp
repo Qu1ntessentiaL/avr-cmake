@@ -51,34 +51,75 @@ namespace GPIO {
         static volatile uint8_t *pin() { return &PINE; }
     };
 
-    /** Pin */
+    /** Port F */
+    template<>
+    struct PortRegs<Port::F> {
+        static volatile uint8_t *port() { return &PORTF; }
+        static volatile uint8_t *ddr() { return &DDRF; }
+        static volatile uint8_t *pin() { return &PINF; }
+    };
+
+    /** Port G */
+    template<>
+    struct PortRegs<Port::G> {
+        static volatile uint8_t *port() { return &PORTG; }
+        static volatile uint8_t *ddr() { return &DDRG; }
+        static volatile uint8_t *pin() { return &PING; }
+    };
+
+    /** GPIO flags */
+    enum class Direction : uint8_t {
+        Input,
+        Output
+    };
+
+    enum class Pull : uint8_t {
+        None,
+        Up
+    };
+
+    enum class Level : uint8_t {
+        Low,
+        High
+    };
+
+    /** GPIO Pin */
     template<Port P, uint8_t Bit>
     class Pin {
         static_assert(Bit < 8, "GPIO pin bit must be 0..7");
 
+        static constexpr uint8_t mask = (1 << Bit);
+
     public:
-        static inline void output() {
-            *PortRegs<P>::ddr() |= (1 << Bit);
+        static void init(Direction dir,
+                         Pull pull = Pull::None,
+                         Level level = Level::Low) {
+            if (dir == Direction::Output) {
+                *PortRegs<P>::ddr() |= mask;
+                write(level);
+            } else {
+                *PortRegs<P>::ddr() &= ~mask;
+                if (pull == Pull::Up)
+                    *PortRegs<P>::port() |= mask;
+                else
+                    *PortRegs<P>::port() &= ~mask;
+            }
         }
 
-        static inline void input() {
-            *PortRegs<P>::ddr() &= ~(1 << Bit);
+        static void output() { *PortRegs<P>::ddr() |= mask; }
+        static void input() { *PortRegs<P>::ddr() &= ~mask; }
+
+        static void high() { *PortRegs<P>::port() |= mask; }
+        static void low() { *PortRegs<P>::port() &= ~mask; }
+
+        static void toggle() { *PortRegs<P>::pin() = mask; }
+
+        static bool read() {
+            return (*PortRegs<P>::pin() & mask) != 0;
         }
 
-        static inline void high() {
-            *PortRegs<P>::port() |= (1 << Bit);
-        }
-
-        static inline void low() {
-            *PortRegs<P>::port() &= ~(1 << Bit);
-        }
-
-        static inline void toggle() {
-            *PortRegs<P>::pin() = (1 << Bit); // AVR toggle
-        }
-
-        static inline bool read() {
-            return (*PortRegs<P>::pin() & (1 << Bit)) != 0;
+        static void write(Level level) {
+            (level == Level::High) ? high() : low();
         }
     };
 }
