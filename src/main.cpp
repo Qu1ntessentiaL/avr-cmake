@@ -7,20 +7,14 @@
 using namespace GPIO;
 using namespace UART;
 
-using LED_Y = Pin<Port::E, 0>;
 using LED_G = Pin<Port::D, 0>;
 
 // Обработчик прерывания таймера
 ISR(TIMER1_COMPA_vect) {
-    LED_Y::toggle();
-    PORTD ^= (1 << PD0);
+    LED_G::toggle();
 }
 
 int main() {
-    LED_Y::init(Direction::Output,
-                Pull::None,
-                Level::Low);
-
     LED_G::init(Direction::Output,
                 Pull::None,
                 Level::High);
