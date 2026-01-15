@@ -166,20 +166,18 @@ function(add_avr_executable EXECUTABLE_NAME)
             ADDITIONAL_MAKE_CLEAN_FILES "${map_file}"
     )
 
-    # upload - with dfu-programmer
+    # upload - with avrdude
     add_custom_target(
             upload_${EXECUTABLE_NAME}
-
-            ${AVR_UPLOADTOOL} ${AVR_MCU} erase
-            COMMAND ${AVR_UPLOADTOOL} ${AVR_MCU} flash ${hex_file}
+            ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_OPTIONS} -U flash:w:${hex_file}:i
             DEPENDS ${hex_file}
             COMMENT "Uploading ${hex_file} to ${AVR_MCU} using ${AVR_UPLOADTOOL}"
     )
 
-    # upload eeprom only - with dfu-programmer
+    # upload eeprom only - with avrdude
     add_custom_target(
             upload_eeprom
-            ${AVR_UPLOADTOOL} ${AVR_MCU} flash-eeprom ${eeprom_image}
+            ${AVR_UPLOADTOOL} ${AVR_UPLOADTOOL_OPTIONS} -U eeprom:w:${eeprom_image}:i
             DEPENDS ${eeprom_image}
             COMMENT "Uploading ${eeprom_image} to ${AVR_MCU} using ${AVR_UPLOADTOOL}"
     )

@@ -13,7 +13,7 @@
 # Modified by Jacob Brown (jb21g14) on 14/05/2018
 # Modified by James Scrase (jms1g19) on 08/04/2021
 # For use by Computer System 2 Students at the University of Southampton
-# All settings are based on an at90usb1286 chip, using dfu-programmer as the upload tool
+# All settings are based on an atmega128a chip, using avrdude as the upload tool
 #
 # N.B.: The CMake project needs to be reloaded every time a new source file is created
 #
@@ -46,9 +46,17 @@ cmake_minimum_required(VERSION 3.15)
 # tools to be used for programming the AVR
 ##################################################################################
 
-set(AVR_UPLOADTOOL dfu-programmer)
-set(AVR_UPLOADTOOL_PORT usb)
-#set(AVR_UPLOADTOOL_OPTIONS)
+set(AVR_MCU_PRG m128)
+
+set(AVR_UPLOADTOOL avrdude)
+set(AVR_PROGRAMMER usbasp)
+
+set(AVR_UPLOADTOOL_OPTIONS
+        -p ${AVR_MCU_PRG}
+        -c ${AVR_PROGRAMMER}
+        -v
+)
+
 set(AVR_MCU atmega128a)
 set(F_CPU 7372800UL)
 
