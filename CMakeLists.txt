@@ -104,8 +104,11 @@ target_link_libraries(${PROJECT_NAME}.elf PRIVATE avr_platform)
 # Add optional ChibiOS (uncomment when ChibiOS present)
 # ---------------------------
 add_subdirectory(libs/ChibiOS)
-# target_link_libraries(${PROJECT_NAME}.elf PRIVATE chibios-nil)
 
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE chibios-nil)
+target_compile_options(chibios-nil PRIVATE
+        -mmcu=atmega128a
+)
 # ---------------------------
 # Post-build hooks (HEX, EEP, SIZE, DISASM)
 # ---------------------------
