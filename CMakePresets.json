@@ -6,7 +6,7 @@
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "toolchainFile": "${sourceDir}/toolchain/generic-gcc-avr.cmake",
+      "toolchainFile": "${sourceDir}/cmake/toolchain-avr-gcc.cmake",
       "cacheVariables": {
       }
     },
