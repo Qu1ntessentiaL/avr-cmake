@@ -58,7 +58,7 @@ namespace UART {
         static constexpr uint8_t UCSRnC = 0x40;   // UCSR0C
         static constexpr uint8_t UBRRnL = 0x29;   // UBRR0L
         static constexpr uint8_t UBRRnH = 0x40;   // UBRR0H
-        static constexpr uint8_t UDRn = 0x2C;     // UDR0
+        static constexpr uint8_t UDRn   = 0x2C;   // UDR0
 
     public:
         // Инициализация UART0
