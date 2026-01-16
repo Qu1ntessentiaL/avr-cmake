@@ -85,7 +85,9 @@ include("${CMAKE_SOURCE_DIR}/cmake/avr-platform.cmake")
 # ---------------------------
 # Create executable (ELF)
 # ---------------------------
-add_executable(${PROJECT_NAME}.elf ${SRC_FILES})
+add_executable(${PROJECT_NAME}.elf
+        ${SRC_FILES}
+)
 
 # include directories
 if (INCLUDE_DIRS)
