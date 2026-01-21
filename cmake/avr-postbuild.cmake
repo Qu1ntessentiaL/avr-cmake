@@ -28,8 +28,9 @@ function(avr_post_build TARGET)
 
             # SIZE
             COMMAND ${CMAKE_SIZE}
-            --format=avr
-            --mcu=${AVR_MCU}
+            --format=gnu
+            --radix=10
+            --common
             $<TARGET_FILE:${TARGET}>
 
             # DISASSEMBLY
