@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
+set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "" FORCE)
+
 # ---------------------------
 # Project
 # ---------------------------
@@ -22,19 +24,6 @@ if (NOT DEFINED AVR_PROGRAMMER)
 endif()
 if (NOT DEFINED AVR_UPLOADTOOL)
     set(AVR_UPLOADTOOL avrdude CACHE STRING "Upload tool (avrdude)")
-endif()
-
-# ---------------------------
-# If user passed a toolchain file, it will set CMAKE_OBJCOPY/CMAKE_SIZE etc.
-# Otherwise include our default toolchain (optional)
-# To force use our shipped toolchain call cmake with -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-avr-gcc.cmake
-# ---------------------------
-# (expect toolchain to be provided by user environment; otherwise include local)
-if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    # Try to include our local toolchain (non-mandatory)
-    if (EXISTS "${CMAKE_SOURCE_DIR}/cmake/toolchain-avr-gcc.cmake")
-        include("${CMAKE_SOURCE_DIR}/cmake/toolchain-avr-gcc.cmake")
-    endif()
 endif()
 
 # ---------------------------
@@ -105,12 +94,12 @@ target_link_libraries(${PROJECT_NAME}.elf PRIVATE avr_platform)
 # ---------------------------
 # Add optional ChibiOS (uncomment when ChibiOS present)
 # ---------------------------
-add_subdirectory(libs/ChibiOS)
-
-target_link_libraries(${PROJECT_NAME}.elf PRIVATE chibios-nil)
-target_compile_options(chibios-nil PRIVATE
-        -mmcu=atmega128a
-)
+# add_subdirectory(libs/ChibiOS)
+#
+# target_link_libraries(${PROJECT_NAME}.elf PRIVATE chibios-nil)
+# target_compile_options(chibios-nil PRIVATE
+#         -mmcu=atmega128a
+# )
 # ---------------------------
 # Post-build hooks (HEX, EEP, SIZE, DISASM)
 # ---------------------------
@@ -127,4 +116,15 @@ add_custom_target(flash
         -U flash:w:${PROJECT_NAME}.elf.hex
         DEPENDS ${PROJECT_NAME}.elf
         COMMENT "Flashing ${PROJECT_NAME}.elf.hex to device"
+)
+
+# ---------------------------
+# Erase target using avrdude
+# ---------------------------
+add_custom_target(erase
+        COMMAND ${AVR_UPLOADTOOL}
+        -p ${AVR_MCU_PRG}
+        -c ${AVR_PROGRAMMER}
+        -e
+        COMMENT "Chip erase"
 )
