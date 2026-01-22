@@ -3,11 +3,20 @@
 function(avr_post_build TARGET)
     if (NOT TARGET)
         message(FATAL_ERROR "avr_post_build: TARGET is required")
-    endif()
+    endif ()
 
     if (NOT DEFINED AVR_MCU)
         message(FATAL_ERROR "avr_post_build: AVR_MCU is not defined")
-    endif()
+    endif ()
+
+    # Получаем базовое имя цели без .elf если оно есть
+    get_target_property(TARGET_OUTPUT_NAME ${TARGET} OUTPUT_NAME)
+    if (NOT TARGET_OUTPUT_NAME)
+        set(TARGET_OUTPUT_NAME ${TARGET})
+    endif ()
+
+    # Убираем возможное расширение .elf
+    string(REGEX REPLACE "\\.elf$" "" TARGET_BASE ${TARGET_OUTPUT_NAME})
 
     add_custom_command(TARGET ${TARGET} POST_BUILD
             # HEX
