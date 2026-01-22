@@ -12,7 +12,6 @@ using namespace UART;
 using LED_G = Pin<Port::D, 0>;
 
 // Обработчик прерывания таймера
-extern "C" __attribute__((used))
 ISR(TIMER1_COMPA_vect) {
     PORTD ^= (1 << 0);
 }
