@@ -37,7 +37,6 @@ function(avr_post_build TARGET)
 
             # SIZE
             COMMAND ${CMAKE_SIZE}
-            --format=avr
             --radix=10
             --common
             $<TARGET_FILE:${TARGET}>

@@ -25,6 +25,8 @@ target_compile_options(avr_platform INTERFACE
         -fno-strict-aliasing
         -ffunction-sections
         -fdata-sections
+        # -fno-exceptions
+        # -fno-rtti
 )
 
 # definitions

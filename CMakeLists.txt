@@ -88,7 +88,9 @@ if (INCLUDE_DIRS)
 endif ()
 
 # Link to platform
-target_link_libraries(${PROJECT_NAME} PRIVATE avr_platform)
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        avr_platform
+)
 
 # ---------------------------
 # Ensure map file is produced (map name set by avr_platform via -Wl,-Map=...)

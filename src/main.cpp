@@ -1,19 +1,10 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 #include <avr/io.h>
-#include <util/delay.h>
-
-#include "gpio.hpp"
-#include "usart.hpp"
-
-using namespace GPIO;
-using namespace UART;
-
-using LED_G = Pin<Port::D, 0>;
 
 // Обработчик прерывания таймера
 ISR(TIMER1_COMPA_vect) {
-    PORTD ^= (1 << 0);
+    PORTD ^= (1 << PD0);
 }
 
 int main() {
@@ -26,5 +17,5 @@ int main() {
 
     sei();
 
-    while (1) {}
+    while (true) {}
 }
