@@ -5,6 +5,14 @@
 set(CMAKE_SYSTEM_NAME Generic)
 set(CMAKE_SYSTEM_PROCESSOR avr)
 
+if (WIN32)
+    set(EXECUTABLE_SUFFIX ".exe")
+    message(YES)
+else ()
+    set(EXECUTABLE_SUFFIX "")
+    message(NO)
+endif ()
+
 # Определяем корневой путь для тулчейна
 # 1. Проверяем явную переменную AVR_TOOLCHAIN_PATH
 # 2. Проверяем старый AVR_FIND_ROOT_PATH
@@ -32,9 +40,9 @@ if (AVR_ROOT_PATH)
     set(AVR_BIN_PATH "${AVR_ROOT_PATH}/bin")
 
     # Компиляторы с полными путями
-    set(CMAKE_C_COMPILER   "${AVR_BIN_PATH}/avr-gcc"   CACHE FILEPATH "AVR C compiler")
-    set(CMAKE_CXX_COMPILER "${AVR_BIN_PATH}/avr-g++"   CACHE FILEPATH "AVR C++ compiler")
-    set(CMAKE_ASM_COMPILER "${AVR_BIN_PATH}/avr-gcc"   CACHE FILEPATH "AVR assembler")
+    set(CMAKE_C_COMPILER   "${AVR_BIN_PATH}/avr-gcc${EXECUTABLE_SUFFIX}" CACHE FILEPATH "AVR C compiler")
+    set(CMAKE_CXX_COMPILER "${AVR_BIN_PATH}/avr-g++${EXECUTABLE_SUFFIX}" CACHE FILEPATH "AVR C++ compiler")
+    set(CMAKE_ASM_COMPILER "${AVR_BIN_PATH}/avr-gcc${EXECUTABLE_SUFFIX}" CACHE FILEPATH "AVR assembler")
 
     # Утилиты
     set(CMAKE_OBJCOPY "${AVR_BIN_PATH}/avr-objcopy" CACHE INTERNAL "")
