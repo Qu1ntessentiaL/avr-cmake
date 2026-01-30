@@ -30,7 +30,7 @@ switch_avr() {
     # Определяем путь в зависимости от версии
     case "$version" in
         5|5.4|old|avr5)
-            avr_path="/opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_old/bin"
+            avr_path="/opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_v5.4.0/bin"
             version_name="5.4.0 (old)"
             ;;
         15|15.1|new|avr15|latest)
@@ -98,8 +98,8 @@ avr-list() {
     echo "📚 Доступные версии AVR:"
     echo ""
     echo "1. Версия 5.4.0 (old):"
-    echo "   Путь: /opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_old/bin"
-    if [ -d "/opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_old/bin" ]; then
+    echo "   Путь: /opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_v5.4.0/bin"
+    if [ -d "/opt/avr-gcc/avr8-gnu-toolchain-linux_x86_64_v5.4.0/bin" ]; then
         echo "   ✅ Установлена"
     else
         echo "   ❌ Не установлена"
