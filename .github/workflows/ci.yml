@@ -42,9 +42,21 @@ jobs:
           sudo apt-get install -y cmake ninja-build gcc-avr avr-libc binutils-avr ccache
       - name: Configure
         run: |
+          CC_PATH=$(command -v avr-gcc || true)
+          CXX_PATH=$(command -v avr-g++ || true)
+          if [ -z "$CC_PATH" ] || [ -z "$CXX_PATH" ]; then
+            echo "avr-gcc or avr-g++ not found in PATH"
+            echo "Installed files:"
+            command -v avr-gcc || true
+            command -v avr-g++ || true
+            exit 1
+          fi
           cmake -S . -B build/${{ matrix.build_type }} -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-avr-gcc.cmake
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-avr-gcc.cmake \
+            -DCMAKE_C_COMPILER="$CC_PATH" \
+            -DCMAKE_CXX_COMPILER="$CXX_PATH" \
+            -DCMAKE_ASM_COMPILER="$CC_PATH"
       - name: Build
         run: cmake --build build/${{ matrix.build_type }} --config ${{ matrix.build_type }} -j
       - name: Upload artifacts
