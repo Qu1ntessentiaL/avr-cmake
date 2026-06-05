@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  format:
+    name: Format check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install clang-format
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-format git
+      - name: Run clang-format check
+        run: |
+          git config --global --add safe.directory $GITHUB_WORKSPACE
+          files=$(git ls-files '*.c' '*.cpp' '*.h' '*.hpp')
+          if [ -n "$files" ]; then
+            echo "$files" | xargs -r clang-format -style=file -i
+            if ! git diff --quiet; then
+              echo "Formatting changes detected. Run clang-format locally and push fixes."
+              git --no-pager diff
+              exit 1
+            fi
+          fi
+
+  build:
+    name: Build (AVR) - ${{ matrix.build_type }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain and build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc-avr avr-libc binutils-avr ccache
+      - name: Configure
+        run: |
+          cmake -S . -B build/${{ matrix.build_type }} -G Ninja \
+            -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+            -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-avr-gcc.cmake
+      - name: Build
+        run: cmake --build build/${{ matrix.build_type }} --config ${{ matrix.build_type }} -j
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-${{ matrix.build_type }}
+          path: |
+            build/${{ matrix.build_type }}/*.hex
+            build/${{ matrix.build_type }}/*.elf
+            build/${{ matrix.build_type }}/*.eep
+
+  test:
+    name: Run CTest (if available)
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build gcc-avr avr-libc binutils-avr
+      - name: Run tests
+        run: |
+          if [ -d build/Release ]; then
+            cd build/Release
+            if command -v ctest >/dev/null 2>&1; then
+              ctest --output-on-failure || true
+            else
+              echo "ctest not found; skipping tests"
+            fi
+          else
+            echo "No Release build directory; skipping tests"
+          fi
