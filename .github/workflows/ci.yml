@@ -54,6 +54,7 @@ jobs:
           cmake -S . -B build/${{ matrix.build_type }} -G Ninja \
             -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
             -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-avr-gcc.cmake \
+            -DAVR_TOOLCHAIN_PATH=/usr \
             -DCMAKE_C_COMPILER="$CC_PATH" \
             -DCMAKE_CXX_COMPILER="$CXX_PATH" \
             -DCMAKE_ASM_COMPILER="$CC_PATH"
