@@ -115,30 +115,24 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 #         -mmcu=atmega128a
 # )
 # ---------------------------
-# Post-build hooks (HEX, EEP, SIZE, DISASM)
+# Post-build hooks (HEX, EEP, SIZE, DISASM, reports)
 # ---------------------------
 include("${CMAKE_SOURCE_DIR}/cmake/avr-postbuild.cmake")
-avr_post_build(${PROJECT_NAME})
+add_avr_post_build_commands(${PROJECT_NAME})
+add_symbol_sizes_postbuild(${PROJECT_NAME})
+add_symbol_addresses_postbuild(${PROJECT_NAME})
+add_text_info_target(${PROJECT_NAME})
+add_flash_target(${PROJECT_NAME})
+add_erase_flash_target()
 
-# ---------------------------
-# Flash target using avrdude
-# ---------------------------
-add_custom_target(flash
-        COMMAND ${AVR_UPLOADTOOL}
-        -p ${AVR_MCU_PRG}
-        -c ${AVR_PROGRAMMER}
-        -U flash:w:${PROJECT_NAME}.hex
-        DEPENDS ${PROJECT_NAME}
-        COMMENT "Flashing ${PROJECT_NAME}.hex to device"
-)
+if (TARGET flash_${PROJECT_NAME})
+    add_custom_target(flash DEPENDS flash_${PROJECT_NAME}
+        COMMENT "Flash ${PROJECT_NAME} to AVR"
+    )
+endif()
 
-# ---------------------------
-# Erase target using avrdude
-# ---------------------------
-add_custom_target(erase
-        COMMAND ${AVR_UPLOADTOOL}
-        -p ${AVR_MCU_PRG}
-        -c ${AVR_PROGRAMMER}
-        -e
-        COMMENT "Chip erase"
-)
+if (TARGET erase_flash)
+    add_custom_target(erase DEPENDS erase_flash
+        COMMENT "Erase AVR flash"
+    )
+endif()
