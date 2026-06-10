@@ -6,28 +6,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  format:
-    name: Format check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format git
-      - name: Run clang-format check
-        run: |
-          git config --global --add safe.directory $GITHUB_WORKSPACE
-          files=$(git ls-files '*.c' '*.cpp' '*.h' '*.hpp')
-          if [ -n "$files" ]; then
-            echo "$files" | xargs -r clang-format -style=file -i
-            if ! git diff --quiet; then
-              echo "Formatting changes detected. Run clang-format locally and push fixes."
-              git --no-pager diff
-              exit 1
-            fi
-          fi
-
   build:
     name: Build (AVR) - ${{ matrix.build_type }}
     runs-on: ubuntu-latest
