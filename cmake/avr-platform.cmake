@@ -40,3 +40,9 @@ target_link_options(avr_platform INTERFACE
         -Wl,--gc-sections
         -Wl,-Map=${CMAKE_PROJECT_NAME}.map
 )
+
+if (DEFINED AVR_LINKER_SCRIPT_ABSOLUTE AND AVR_LINKER_SCRIPT_ABSOLUTE)
+    target_link_options(avr_platform INTERFACE
+            -Wl,-T,${AVR_LINKER_SCRIPT_ABSOLUTE}
+    )
+endif ()

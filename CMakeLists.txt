@@ -33,6 +33,21 @@ endif ()
 if (NOT DEFINED AVR_UPLOADTOOL)
     set(AVR_UPLOADTOOL avrdude CACHE STRING "Upload tool (avrdude)")
 endif ()
+if (NOT DEFINED AVR_LINKER_SCRIPT)
+    set(AVR_LINKER_SCRIPT "" CACHE STRING "Optional AVR linker script (.ld); absolute or relative to the project root")
+endif ()
+
+if (AVR_LINKER_SCRIPT)
+    if (IS_ABSOLUTE "${AVR_LINKER_SCRIPT}")
+        set(AVR_LINKER_SCRIPT_ABSOLUTE "${AVR_LINKER_SCRIPT}")
+    else ()
+        set(AVR_LINKER_SCRIPT_ABSOLUTE "${CMAKE_SOURCE_DIR}/${AVR_LINKER_SCRIPT}")
+    endif ()
+
+    if (NOT EXISTS "${AVR_LINKER_SCRIPT_ABSOLUTE}")
+        message(FATAL_ERROR "AVR_LINKER_SCRIPT not found: ${AVR_LINKER_SCRIPT_ABSOLUTE}")
+    endif ()
+endif ()
 
 # ---------------------------
 # Build type
@@ -44,6 +59,9 @@ endif ()
 message(STATUS "AVR MCU: ${AVR_MCU}")
 message(STATUS "F_CPU: ${F_CPU}")
 message(STATUS "Upload tool: ${AVR_UPLOADTOOL}, programmer: ${AVR_PROGRAMMER}")
+if (AVR_LINKER_SCRIPT)
+    message(STATUS "Linker script: ${AVR_LINKER_SCRIPT_ABSOLUTE}")
+endif ()
 
 # ---------------------------
 # Sources discovery

@@ -10,3 +10,11 @@ https://www.microchip.com/en-us/tools-resources/develop/microchip-studio/gcc-com
 **"User"** - только для текущего пользователя,<br>
 **"Machine"** - для всех пользователей (требуются права администратора);
 5. Проверить с помощью `echo $env:AVR_FIND_ROOT_PATH`;
+
+Свой linker script можно подключить через CMake cache-переменную `AVR_LINKER_SCRIPT`:
+
+```bash
+cmake -S . -B build/Release -G Ninja -DCMAKE_BUILD_TYPE=Release -DAVR_LINKER_SCRIPT=linker/my.ld
+```
+
+Путь может быть абсолютным или относительным к корню проекта.
